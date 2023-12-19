@@ -17,7 +17,7 @@ def evalBase(targets, outputs):
         result[key] = score
     return result
 
-def diplayConfusion(targets, outputs, labels):
+def displayConfusion(targets, outputs, labels):
     cm = confusion_matrix(targets, outputs, labels=labels)
     cm_display = ConfusionMatrixDisplay(cm, display_labels=labels)
     cm_display.plot(cmap="Blues")
