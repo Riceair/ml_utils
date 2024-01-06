@@ -1,0 +1,58 @@
+from nvidia/cuda:12.3.1-runtime-ubuntu20.04
+ENV PIP_ROOT_USER_ACTION=ignore
+ENV PYTHON_VERSION 3.10.12
+RUN apt-get update \
+    &&  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+RUN TZ=Asia/Taipei \
+    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone \
+    && dpkg-reconfigure -f noninteractive tzdata
+RUN apt-get install -y --no-install-recommends \
+			curl\
+			dpkg-dev \
+			gcc \
+			gnupg \
+			libbluetooth-dev \
+			libbz2-dev \
+			libc6-dev \
+			libdb-dev \
+			libexpat1-dev \
+			libffi-dev \
+			libgdbm-dev \
+			liblzma-dev \
+			libncursesw5-dev \
+			libreadline-dev \
+			libsqlite3-dev \
+			libssl-dev \
+			make \
+			tk-dev \
+			uuid-dev \
+			wget \
+			xz-utils \
+			zlib1g-dev && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
+	
+WORKDIR /temp
+# download python
+RUN wget https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tgz && \
+	tar -xvf Python-$PYTHON_VERSION.tgz
+	
+# compile & install python
+RUN cd Python-$PYTHON_VERSION && \
+    ./configure --enable-optimizations && \
+    make && \
+    make install
+
+WORKDIR /workspace
+RUN rm -r /temp && \
+    ln -s /usr/local/bin/python3 /usr/local/bin/python && \
+    ln -s /usr/local/bin/pip3 /usr/local/bin/pip
+CMD ["python3"]
+
+Python Dockerfile:
+https://github.com/docker-library/python/blob/31716e66d5a755d24929d126c6d60b3a7e3b8db3/3.10/alpine3.17/Dockerfile
+Dockerfile 參考:
+https://zhuanlan.zhihu.com/p/471484611
+view docker image layer:
+https://github.com/wagoodman/dive
