@@ -8,9 +8,11 @@ RUN TZ=Asia/Taipei \
     && echo $TZ > /etc/timezone \
     && dpkg-reconfigure -f noninteractive tzdata
 RUN apt-get install -y --no-install-recommends \
+			software-properties-common \
 			curl \
 			dpkg-dev \
-			gcc-11 \
+			gcc \
+			g++ \
 			gnupg \
 			libbluetooth-dev \
 			libbz2-dev \
@@ -48,11 +50,6 @@ WORKDIR /workspace
 RUN rm -r /temp && \
     ln -s /usr/local/bin/python3 /usr/local/bin/python && \
     ln -s /usr/local/bin/pip3 /usr/local/bin/pip
+	
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 CMD ["python3"]
-
-# Python Dockerfile:
-# https://github.com/docker-library/python/blob/31716e66d5a755d24929d126c6d60b3a7e3b8db3/3.10/alpine3.17/Dockerfile
-# Dockerfile 參考:
-# https://zhuanlan.zhihu.com/p/471484611
-# view docker image layer:
-# https://github.com/wagoodman/dive
