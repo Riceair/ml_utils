@@ -10,7 +10,7 @@ RUN TZ=Asia/Taipei \
 RUN apt-get install -y --no-install-recommends \
 			curl \
 			dpkg-dev \
-			gcc-11 \
+			gcc \
 			gnupg \
 			libbluetooth-dev \
 			libbz2-dev \
